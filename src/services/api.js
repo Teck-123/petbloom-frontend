@@ -1,3 +1,16 @@
+/**
+ * API Service Module
+ * 
+ * Axios instance configured with:
+ * - Base URL pointing to backend API
+ * - Request interceptor for JWT token authentication
+ * - Response interceptor for handling 401 errors
+ * 
+ * All API calls should use this instance to ensure
+ * authentication headers are automatically included
+ * 
+ * @module api
+ */
 import axios from 'axios'
 
 const api = axios.create({
