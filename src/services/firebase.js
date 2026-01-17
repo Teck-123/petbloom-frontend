@@ -1,3 +1,17 @@
+/**
+ * Firebase Service Module
+ * 
+ * Initializes Firebase app with configuration from environment variables
+ * Exports initialized instances of:
+ * - auth: Firebase Authentication
+ * - db: Firestore Database
+ * - storage: Firebase Storage
+ * 
+ * Configuration is loaded from .env file (VITE_FIREBASE_* variables)
+ * 
+ * @module firebase
+ */
+
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
