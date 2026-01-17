@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER:-petbloom}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-petbloom123}
+      POSTGRES_DB: ${DB_NAME:-petbloom}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-petbloom}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-petbloom}:${DB_PASSWORD:-petbloom123}@db:5432/${DB_NAME:-petbloom}
+      FBASE_CREDENTIALS: /app/firebase-credentials.json
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-key}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+    volumes:
+      - ./firebase-credentials.json:/app/firebase-credentials.json
+      - ./:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "prisma db push --skip-generate &&
+             prisma generate &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  postgres_data:
