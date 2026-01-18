@@ -7,6 +7,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 import ErrorBoundary from './components/ErrorBoundary'
+import DatabaseSeeder from './components/DatabaseSeeder'
 
 // Pages
 import Home from './pages/Home'
@@ -95,6 +96,7 @@ function App() {
                   },
                 }}
               />
+              <DatabaseSeeder />
             </div>
           </Router>
         </AuthProvider>
