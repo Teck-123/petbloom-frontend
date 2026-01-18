@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 function Checkout() {
   const navigate = useNavigate()
   const [paymentMethod, setPaymentMethod] = useState('card')
-  
+
   const {
     register,
     handleSubmit,
@@ -43,7 +43,7 @@ function Checkout() {
           totalPrice: (item.product ? item.product.price : (item.pet ? item.pet.adoptionFee : 0)) * item.quantity
         }))
       }
-      
+
       const response = await api.post('/orders', orderData)
       return response.data
     },
@@ -110,7 +110,7 @@ function Checkout() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
           <div className="lg:col-span-2">
@@ -121,7 +121,7 @@ function Checkout() {
                   <MapPin className="h-5 w-5 mr-2 text-primary-500" />
                   Shipping Information
                 </h2>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -153,7 +153,7 @@ function Checkout() {
                       </div>
                       <input
                         type="email"
-                        {...register('email', { 
+                        {...register('email', {
                           required: 'Email is required',
                           pattern: {
                             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -181,7 +181,7 @@ function Checkout() {
                         type="tel"
                         {...register('phone', { required: 'Phone number is required' })}
                         className={`input pl-10 ${errors.phone ? 'border-red-500' : ''}`}
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+254 716 115225"
                       />
                     </div>
                     {errors.phone && (
@@ -307,7 +307,7 @@ function Checkout() {
                   <Truck className="h-5 w-5 mr-2 text-primary-500" />
                   Shipping Method
                 </h2>
-                
+
                 <div className="space-y-3">
                   <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                     <input
@@ -368,7 +368,7 @@ function Checkout() {
                   <CreditCard className="h-5 w-5 mr-2 text-primary-500" />
                   Payment Method
                 </h2>
-                
+
                 <div className="space-y-3">
                   <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                     <input
@@ -459,7 +459,7 @@ function Checkout() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
-              
+
               <div className="space-y-3 mb-6 max-h-60 overflow-y-auto">
                 {cartItems?.map((item) => {
                   const product = item.product

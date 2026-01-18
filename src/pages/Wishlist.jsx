@@ -107,7 +107,7 @@ function Wishlist() {
               const name = product ? product.name : (pet ? pet.name : 'Unknown')
               const price = product ? product.price : (pet ? pet.adoptionFee : 0)
               const image = product ? product.images?.[0] : (pet ? pet.images?.[0] : '')
-              const description = product 
+              const description = product
                 ? `${product.brand} • ${product.category.replace('_', ' ')}`
                 : (pet ? `${pet.breed} • ${pet.age} years old` : '')
 
@@ -129,7 +129,7 @@ function Wishlist() {
                   <div className="p-4">
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
                     <p className="text-sm text-gray-600 mb-2">{description}</p>
-                    <p className="text-xl font-bold text-primary-500 mb-4">${price}</p>
+                    <p className="text-xl font-bold text-primary-500 mb-4">KSh {price.toLocaleString()}</p>
                     <div className="flex space-x-2">
                       <button
                         onClick={() => navigate(product ? `/products/${product.id}` : `/pets/${pet.id}`)}

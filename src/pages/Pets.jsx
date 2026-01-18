@@ -41,7 +41,7 @@ function Pets() {
       })
       
       const response = await api.get(`/pets?${params}`)
-      return response.data.data || response.data
+      return response.data
     }
   })
 
@@ -235,7 +235,7 @@ function Pets() {
             {/* Results Count */}
             <div className="mb-6">
               <p className="text-gray-600">
-                {isLoading ? 'Loading...' : `Found ${petsData?.length || 0} pets`}
+                {isLoading ? 'Loading...' : `Found ${petsData?.data?.length || 0} pets`}
               </p>
             </div>
 
@@ -252,7 +252,7 @@ function Pets() {
                   </div>
                 ))}
               </div>
-            ) : petsData?.length === 0 ? (
+            ) : petsData?.data?.length === 0 ? (
               <div className="text-center py-12">
                 <PawPrint className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No pets found</h3>
@@ -276,7 +276,7 @@ function Pets() {
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {petsData?.map((pet) => (
+                  {petsData?.data?.map((pet) => (
                     <div key={pet.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                       <div className="relative">
                         <img

@@ -26,7 +26,7 @@ function Footer() {
               <span className="text-xl font-bold">PetBloom</span>
             </Link>
             <p className="text-gray-400 mb-6 max-w-md">
-              Your trusted online marketplace for healthy pets and premium pet supplies. 
+              Your trusted online marketplace for healthy pets and premium pet supplies.
               We connect loving families with adorable companions from verified breeders and shelters.
             </p>
             <div className="flex space-x-4">
@@ -79,11 +79,11 @@ function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
+                <span className="text-gray-400">+254 716 115225</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-primary-400" />
-                <span className="text-gray-400">123 Pet Street, Animal City</span>
+                <span className="text-gray-400">Nairobi, Kenya</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 PetBloom. All rights reserved. Made with ❤️ for pets and their families.
+            © 2026 PetBloom. All rights reserved. Made with ❤️ for pets and their families.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">

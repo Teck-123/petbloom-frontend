@@ -154,3 +154,34 @@ class ReviewResponse(ReviewCreate):
 
     class Config:
         from_attributes = True
+class UserAddressCreate(BaseModel):
+    street: str
+    city: str
+    state: str
+    zipCode: str
+    country: str = "Kenya"
+    isDefault: bool = False
+
+class UserAddressResponse(UserAddressCreate):
+    id: str
+    userId: str
+    createdAt: datetime
+    updatedAt: datetime
+
+    class Config:
+        from_attributes = True
+
+class MessageCreate(BaseModel):
+    recipientId: str
+    content: str
+
+class MessageResponse(BaseModel):
+    id: str
+    senderId: str
+    recipientId: str
+    content: str
+    read: bool
+    createdAt: datetime
+
+    class Config:
+        from_attributes = True

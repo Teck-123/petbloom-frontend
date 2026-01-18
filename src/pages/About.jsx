@@ -42,7 +42,7 @@ function About() {
               About <span className="text-primary-500">PetBloom</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We're passionate about connecting loving families with healthy pets from verified breeders and shelters, 
+              We're passionate about connecting loving families with healthy pets from verified breeders and shelters,
               while providing everything needed for a happy pet life.
             </p>
           </div>
@@ -56,17 +56,17 @@ function About() {
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
               <p className="text-lg text-gray-600 mb-6">
-                PetBloom was founded with a simple yet powerful mission: to make pet adoption and care 
-                accessible, safe, and joyful for everyone involved. We believe every pet deserves a loving 
+                PetBloom was founded with a simple yet powerful mission: to make pet adoption and care
+                accessible, safe, and joyful for everyone involved. We believe every pet deserves a loving
                 home, and every family deserves a healthy, happy companion.
               </p>
               <p className="text-lg text-gray-600 mb-6">
-                By combining technology with compassion, we've created a platform that brings together 
-                responsible breeders, caring shelters, and loving families in a seamless, trustworthy 
+                By combining technology with compassion, we've created a platform that brings together
+                responsible breeders, caring shelters, and loving families in a seamless, trustworthy
                 ecosystem.
               </p>
               <p className="text-lg text-gray-600">
-                Our commitment extends beyond adoption – we're here to support you throughout your 
+                Our commitment extends beyond adoption – we're here to support you throughout your
                 entire pet parenthood journey with expert advice, premium supplies, and ongoing care.
               </p>
             </div>
@@ -93,7 +93,7 @@ function About() {
               The principles that guide everything we do at PetBloom
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-6 text-center">
@@ -117,38 +117,71 @@ function About() {
               The passionate pet lovers behind PetBloom
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="bg-primary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
                 <User className="h-16 w-16 text-primary-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Sarah Johnson</h3>
-              <p className="text-primary-500 font-medium mb-2">Founder & CEO</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Thecla Owano</h3>
+              <p className="text-primary-500 font-medium mb-2">Co-Founder</p>
               <p className="text-gray-600">
-                Lifelong animal lover with 15+ years in pet care industry
+                Passionate about pet welfare and connecting pets with loving families
               </p>
             </div>
-            
+
             <div className="text-center">
               <div className="bg-secondary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
                 <User className="h-16 w-16 text-secondary-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Mike Chen</h3>
-              <p className="text-secondary-500 font-medium mb-2">Head of Operations</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Alex Mureti</h3>
+              <p className="text-secondary-500 font-medium mb-2">Co-Founder & Operations Lead</p>
               <p className="text-gray-600">
-                Former veterinarian ensuring the highest pet care standards
+                Dedicated to ensuring the highest standards of pet care and welfare
               </p>
             </div>
-            
+
             <div className="text-center">
               <div className="bg-accent-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
                 <User className="h-16 w-16 text-accent-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Emily Rodriguez</h3>
-              <p className="text-accent-500 font-medium mb-2">Customer Success Lead</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Sharon Soyian</h3>
+              <p className="text-accent-500 font-medium mb-2">Customer Experience Lead</p>
               <p className="text-gray-600">
-                Dedicated to helping families find their perfect companions
+                Committed to making every pet adoption journey smooth and joyful
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-primary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="h-16 w-16 text-primary-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">David Kamau</h3>
+              <p className="text-primary-500 font-medium mb-2">Technology Lead</p>
+              <p className="text-gray-600">
+                Building innovative solutions to make pet adoption seamless and secure
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-secondary-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="h-16 w-16 text-secondary-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Vanessa Omondi</h3>
+              <p className="text-secondary-500 font-medium mb-2">Marketing & Partnerships</p>
+              <p className="text-gray-600">
+                Growing our community and connecting pet lovers with quality products and services
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-accent-100 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="h-16 w-16 text-accent-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Ian Nasoore</h3>
+              <p className="text-accent-500 font-medium mb-2">Breeder Relations Manager</p>
+              <p className="text-gray-600">
+                Ensuring our network of breeders meets the highest standards of ethical care
               </p>
             </div>
           </div>

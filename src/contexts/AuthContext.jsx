@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { auth } from '../services/firebase'
-import { 
-  signInWithEmailAndPassword, 
+import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
@@ -13,6 +13,11 @@ import toast from 'react-hot-toast'
 
 const AuthContext = createContext()
 
+// Check if Firebase is initialized
+const isFirebaseAvailable = () => {
+  return auth !== undefined && auth !== null
+}
+
 export function useAuth() {
   return useContext(AuthContext)
 }
@@ -23,12 +28,19 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null)
 
   useEffect(() => {
+    // If Firebase is not available, skip auth initialization
+    if (!isFirebaseAvailable()) {
+      console.warn('Firebase is not initialized. Auth features will be limited.')
+      setLoading(false)
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const idToken = await user.getIdToken()
           setToken(idToken)
-          
+
           // Login to backend with Firebase token
           const response = await api.post('/auth/login', { token: idToken })
           setCurrentUser(response.data)
@@ -49,16 +61,21 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
+      if (!isFirebaseAvailable()) {
+        toast.error('Firebase is not configured. Please try again later.')
+        throw new Error('Firebase not available')
+      }
+
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const idToken = await userCredential.user.getIdToken()
-      
+
       const response = await api.post('/auth/login', { token: idToken })
       setCurrentUser(response.data)
       setToken(response.data.access_token)
-      
+
       // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-      
+
       toast.success('Login successful!')
       return response.data
     } catch (error) {
@@ -69,21 +86,26 @@ export function AuthProvider({ children }) {
 
   const register = async (email, password, fullName, phone) => {
     try {
+      if (!isFirebaseAvailable()) {
+        toast.error('Firebase is not configured. Please try again later.')
+        throw new Error('Firebase not available')
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const idToken = await userCredential.user.getIdToken()
-      
+
       // Update user profile
       await userCredential.user.updateProfile({
         displayName: fullName
       })
-      
+
       const response = await api.post('/auth/login', { token: idToken })
       setCurrentUser(response.data)
       setToken(response.data.access_token)
-      
+
       // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-      
+
       toast.success('Registration successful!')
       return response.data
     } catch (error) {
@@ -94,17 +116,22 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = async () => {
     try {
+      if (!isFirebaseAvailable()) {
+        toast.error('Firebase is not configured. Please try again later.')
+        throw new Error('Firebase not available')
+      }
+
       const provider = new GoogleAuthProvider()
       const userCredential = await signInWithPopup(auth, provider)
       const idToken = await userCredential.user.getIdToken()
-      
+
       const response = await api.post('/auth/login', { token: idToken })
       setCurrentUser(response.data)
       setToken(response.data.access_token)
-      
+
       // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-      
+
       toast.success('Google login successful!')
       return response.data
     } catch (error) {
@@ -115,6 +142,14 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
+      if (!isFirebaseAvailable()) {
+        setCurrentUser(null)
+        setToken(null)
+        delete api.defaults.headers.common['Authorization']
+        toast.success('Logged out successfully!')
+        return
+      }
+
       await signOut(auth)
       setCurrentUser(null)
       setToken(null)

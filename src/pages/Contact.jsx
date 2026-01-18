@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 
 function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   const {
     register,
     handleSubmit,
@@ -33,13 +33,13 @@ function Contact() {
     {
       icon: Phone,
       title: 'Call Us',
-      content: '+1 (555) 123-4567',
-      description: 'Mon-Fri 9AM-6PM EST'
+      content: '+254 716 115225',
+      description: 'Mon-Fri 9AM-6PM EAT'
     },
     {
       icon: MapPin,
       title: 'Visit Us',
-      content: '123 Pet Street, Animal City, AC 12345',
+      content: 'Nairobi, Kenya',
       description: 'By appointment only'
     },
     {
@@ -94,7 +94,7 @@ function Contact() {
                 We'd love to hear from you. Send us a message and we'll respond as soon as possible.
               </p>
             </div>
-            
+
             <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -134,7 +134,7 @@ function Contact() {
                 </label>
                 <input
                   type="email"
-                  {...register('email', { 
+                  {...register('email', {
                     required: 'Email is required',
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -157,7 +157,7 @@ function Contact() {
                   type="tel"
                   {...register('phone')}
                   className="input"
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="+254 716 115225"
                 />
               </div>
 
@@ -227,34 +227,34 @@ function Contact() {
               Quick answers to common questions
             </p>
           </div>
-          
+
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 How do I adopt a pet through PetBloom?
               </h3>
               <p className="text-gray-600">
-                Browse our available pets, select your favorite, and complete the adoption process online. 
+                Browse our available pets, select your favorite, and complete the adoption process online.
                 Our team will guide you through every step, including home verification and delivery arrangements.
               </p>
             </div>
-            
+
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Are your breeders verified?
               </h3>
               <p className="text-gray-600">
-                Yes! All breeders on our platform go through a rigorous verification process, including 
+                Yes! All breeders on our platform go through a rigorous verification process, including
                 facility inspections, health certifications, and background checks to ensure the highest standards.
               </p>
             </div>
-            
+
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 What if I need help after adoption?
               </h3>
               <p className="text-gray-600">
-                We provide ongoing support through our customer service team, veterinary partnerships, 
+                We provide ongoing support through our customer service team, veterinary partnerships,
                 and educational resources. We're here to help ensure a smooth transition for both you and your new pet.
               </p>
             </div>

@@ -105,7 +105,7 @@ function ProductDetail() {
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">{product?.name}</h1>
                   <p className="text-lg text-gray-600 mb-2">
-                    {product?.brand} • {product?.category.replace('_', ' ')}
+                    {product?.brand} • {product?.category?.replace?.('_', ' ') || 'Product'}
                   </p>
                   <div className="flex items-center mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -124,7 +124,7 @@ function ProductDetail() {
 
               <div className="mb-6">
                 <p className="text-3xl font-bold text-primary-500 mb-4">${product?.price}</p>
-                
+
                 <div className="flex items-center mb-4">
                   <span className="text-sm text-gray-600 mr-4">
                     {product?.stock > 0 ? `${product?.stock} in stock` : 'Out of stock'}
@@ -167,12 +167,14 @@ function ProductDetail() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Category</span>
-                  <span className="font-medium">{product?.category.replace('_', ' ')}</span>
+                  <span className="font-medium">{product?.category?.replace?.('_', ' ') || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">For Pets</span>
-                  <span className="font-medium">{product?.petType?.join(', ')}</span>
-                </div>
+                {product?.petType && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">For Pets</span>
+                    <span className="font-medium">{typeof product.petType === 'string' ? product.petType : (Array.isArray(product.petType) ? product.petType.join(', ') : 'N/A')}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

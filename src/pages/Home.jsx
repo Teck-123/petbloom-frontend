@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { 
-  PawPrint, 
-  Heart, 
-  ShoppingCart, 
-  Shield, 
-  Truck, 
+import {
+  PawPrint,
+  Heart,
+  ShoppingCart,
+  Shield,
+  Truck,
   Users,
   ArrowRight,
   Star
@@ -57,21 +57,21 @@ function Home() {
 
   const testimonials = [
     {
-      name: 'Sarah Johnson',
-      location: 'New York',
-      comment: 'Found the perfect Golden Retriever puppy through PetBloom. The process was smooth and our new family member is healthy and happy!',
+      name: 'Thecla Owano',
+      location: 'Nairobi',
+      comment: 'Found the perfect companion through PetBloom. The process was smooth and our new family member is healthy and happy!',
       rating: 5
     },
     {
-      name: 'Mike Chen',
-      location: 'California',
-      comment: 'Excellent service! The breeder was professional and the pet supplies recommendation helped us prepare perfectly.',
+      name: 'Alex Mureti',
+      location: 'Nairobi',
+      comment: 'Excellent service! The team was professional and the pet care guidance helped us prepare perfectly.',
       rating: 5
     },
     {
-      name: 'Emily Rodriguez',
-      location: 'Texas',
-      comment: 'Adopted a rescue cat and couldn\'t be happier. PetBloom made the adoption process so easy and stress-free.',
+      name: 'Sharon Soyian',
+      location: 'Nairobi',
+      comment: "Adopted a rescue pet and couldn't be happier. PetBloom made the adoption process so easy and stress-free.",
       rating: 5
     }
   ]
@@ -84,11 +84,11 @@ function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                Find Your Perfect 
+                Find Your Perfect
                 <span className="text-primary-500">Companion</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Discover healthy, loving pets from verified breeders and shelters. 
+                Discover healthy, loving pets from verified breeders and shelters.
                 Everything you need for your new family member in one convenient place.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -170,7 +170,7 @@ function Home() {
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
-          
+
           {petsLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
@@ -224,7 +224,7 @@ function Home() {
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </div>
-          
+
           {productsLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (

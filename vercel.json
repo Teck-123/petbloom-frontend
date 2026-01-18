@@ -1,0 +1,13 @@
+{
+    "env": {
+        "VITE_API_URL": "https://petbloom-frontend-production.up.railway.app/api/v1"
+    },
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}

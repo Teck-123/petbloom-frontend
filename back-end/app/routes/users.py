@@ -1,13 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
+from typing import Optional
 from app.schemas import UserResponse, UserUpdate
 from app.services.fbase_service import verify_fbase_token
 from app.services.prisma_client import prisma_client
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-def get_current_user(token: str = Depends(lambda: None)):
-    if not token:
-        raise HTTPException(status_code=401, detail="No token provided")
+def get_current_user(authorization: Optional[str] = Header(None)):
+    if not authorization:
+        raise HTTPException(status_code=401, detail="No authorization header")
+    try:
+        scheme, token = authorization.split()
+        if scheme.lower() != "bearer":
+            raise HTTPException(status_code=401, detail="Invalid authentication scheme")
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid authorization header")
+    
     decoded = verify_fbase_token(token)
     if not decoded:
         raise HTTPException(status_code=401, detail="Invalid token")

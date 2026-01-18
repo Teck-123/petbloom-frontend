@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { 
-  ArrowLeft, 
-  Heart, 
-  ShoppingCart, 
-  Phone, 
-  Mail, 
+import {
+  ArrowLeft,
+  Heart,
+  ShoppingCart,
+  Phone,
+  Mail,
   MapPin,
   Check,
   Star,
   Calendar,
   Ruler,
-  Palette
+  Palette,
+  PawPrint
 } from 'lucide-react'
 import api from '../services/api'
 import toast from 'react-hot-toast'
@@ -121,7 +122,7 @@ function PetDetail() {
                 className="w-full h-96 object-cover"
               />
             </div>
-            
+
             {/* Thumbnail Images */}
             {pet?.images && pet.images.length > 1 && (
               <div className="flex space-x-2 overflow-x-auto">
@@ -129,9 +130,8 @@ function PetDetail() {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 ${
-                      selectedImage === index ? 'border-primary-500' : 'border-gray-300'
-                    }`}
+                    className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 ${selectedImage === index ? 'border-primary-500' : 'border-gray-300'
+                      }`}
                   >
                     <img
                       src={image}
@@ -164,7 +164,7 @@ function PetDetail() {
 
               <div className="mb-6">
                 <p className="text-3xl font-bold text-primary-500 mb-4">${pet?.adoptionFee}</p>
-                
+
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={handleAddToCart}
@@ -259,7 +259,7 @@ function PetDetail() {
               </div>
               <p className="mt-3 text-gray-700">{pet?.breeder?.description}</p>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Contact Information</h3>
               <div className="space-y-3">
@@ -276,7 +276,7 @@ function PetDetail() {
                   <span className="text-gray-700">{pet?.breeder?.address}</span>
                 </div>
               </div>
-              
+
               <button
                 onClick={handleContactBreeder}
                 className="mt-4 btn-outline w-full"

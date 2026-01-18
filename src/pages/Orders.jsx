@@ -104,7 +104,7 @@ function Orders() {
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-gray-700 mb-2">Order Total</h4>
-                      <p className="text-lg font-bold text-primary-500">${order.totalAmount.toFixed(2)}</p>
+                      <p className="text-lg font-bold text-primary-500">KSh {order.totalAmount.toLocaleString()}</p>
                       <p className="text-sm text-gray-600">
                         {order.shippingMethod.charAt(0).toUpperCase() + order.shippingMethod.slice(1)} Shipping
                       </p>
