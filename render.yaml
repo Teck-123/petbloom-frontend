@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: petbloom-backend
+    runtime: docker
+    dockerfilePath: ./back-end/Dockerfile
+    dockerContext: ./back-end
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: petbloom-db
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://your-netlify-site.netlify.app
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+
+databases:
+  - name: petbloom-db
+    databaseName: petbloom
+    user: petbloom
