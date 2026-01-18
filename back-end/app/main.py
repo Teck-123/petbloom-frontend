@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import get_settings
-from app.routes import users, pets, products, cart, wishlist, orders, uploads, seed, reviews, addresses, messages
+from app.routes import users, pets, products, cart, wishlist, orders, uploads, seed, reviews, addresses, messages, auth
 from app.services.prisma_client import prisma_client
 import os
 import logging
@@ -39,6 +39,7 @@ async def shutdown():
     await prisma_client.disconnect()
 
 app.include_router(users.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/api/v1")
 app.include_router(pets.router, prefix="/api/v1")
 app.include_router(products.router, prefix="/api/v1")
 app.include_router(cart.router, prefix="/api/v1")

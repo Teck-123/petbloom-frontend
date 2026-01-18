@@ -133,16 +133,44 @@ export function AuthProvider({ children }) {
       const userCredential = await signInWithPopup(auth, provider)
       const idToken = await userCredential.user.getIdToken()
 
-      const response = await api.post('/auth/login', { token: idToken })
-      setCurrentUser(response.data)
-      setToken(response.data.access_token)
+      try {
+        // Try to login first (user exists)
+        const response = await api.post('/auth/login', { token: idToken })
+        setCurrentUser(response.data)
+        setToken(response.data.access_token)
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
+        toast.success('Google login successful!')
+        return response.data
+      } catch (error) {
+        // If login fails, register the user
+        if (error.response?.status === 404 || error.response?.status === 400) {
+          try {
+            const email = userCredential.user.email
+            const fullName = userCredential.user.displayName || email.split('@')[0]
 
-      // Set authorization header
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
+            // Register user
+            const registerResponse = await api.post('/users/register', {
+              email: email,
+              name: fullName,
+              firebaseUid: userCredential.user.uid
+            })
 
-      toast.success('Google login successful!')
-      return response.data
+            // Now login
+            const authResponse = await api.post('/auth/login', { token: idToken })
+            setCurrentUser(authResponse.data)
+            setToken(authResponse.data.access_token)
+            api.defaults.headers.common['Authorization'] = `Bearer ${authResponse.data.access_token}`
+            toast.success('Google registration and login successful!')
+            return authResponse.data
+          } catch (registerError) {
+            toast.error(registerError.response?.data?.detail || 'Failed to register Google account')
+            throw registerError
+          }
+        }
+        throw error
+      }
     } catch (error) {
+      console.error('Google login error:', error)
       toast.error(error.response?.data?.detail || 'Google login failed')
       throw error
     }
