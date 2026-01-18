@@ -46,7 +46,7 @@ async def seed_database():
                 "personality": ["friendly", "energetic"],
                 "breederName": "Golden Dreams",
                 "breederRating": 4.8,
-                "price": 1200.00,
+                "price": 156000.00,
                 "available": True
             },
             {
@@ -61,7 +61,7 @@ async def seed_database():
                 "personality": ["calm", "affectionate"],
                 "breederName": "Purrfect Cats",
                 "breederRating": 4.9,
-                "price": 800.00,
+                "price": 104000.00,
                 "available": True
             },
             {
@@ -76,7 +76,7 @@ async def seed_database():
                 "personality": ["playful", "loyal"],
                 "breederName": "Happy Paws",
                 "breederRating": 4.7,
-                "price": 1000.00,
+                "price": 130000.00,
                 "available": True
             }
         ]
@@ -88,7 +88,7 @@ async def seed_database():
                 "category": "food",
                 "petType": "dogs",
                 "brand": "PetPro",
-                "price": 45.99,
+                "price": 5980.00,
                 "images": ["https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400"],
                 "stock": 50,
                 "filters": ["adult"]
@@ -99,7 +99,7 @@ async def seed_database():
                 "category": "habitats",
                 "petType": "cats",
                 "brand": "CatsLounge",
-                "price": 65.00,
+                "price": 8450.00,
                 "images": ["https://images.unsplash.com/photo-1577023311546-cdc07a8454d9?w=400"],
                 "stock": 25,
                 "filters": ["comfortable"]
@@ -110,7 +110,7 @@ async def seed_database():
                 "category": "toys",
                 "petType": "dogs",
                 "brand": "PlayPets",
-                "price": 29.99,
+                "price": 3900.00,
                 "images": ["https://images.unsplash.com/photo-1591769225440-811ad7d6eab3?w=400"],
                 "stock": 40,
                 "filters": ["durable"]
