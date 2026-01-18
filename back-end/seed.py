@@ -17,13 +17,85 @@ async def seed():
         {"name": "Dog Toy Set", "description": "Set of 5 interactive toys", "category": "toys", "petType": "dogs", "brand": "PlayPets", "price": 29.99, "images": ["https://images.unsplash.com/photo-1591769225440-811ad7d6eab3?w=400"], "stock": 40, "filters": ["durable"]}
     ]
     
+    # Create pets
+    pets = []
     for pet in pets_data:
-        await prisma.pet.create(data=pet)
+        created_pet = await prisma.pet.create(data=pet)
+        pets.append(created_pet)
     
+    # Create products
+    products = []
     for product in products_data:
-        await prisma.product.create(data=product)
+        created_product = await prisma.product.create(data=product)
+        products.append(created_product)
+    
+    # Create sample reviews for products
+    if len(products) > 0:
+        await prisma.review.create(data={
+            "userId": "temp_user",
+            "productId": products[0].id,
+            "rating": 5,
+            "comment": "Excellent quality dog food! My pets love it.",
+            "createdAt": None
+        })
+        await prisma.review.create(data={
+            "userId": "demo_user",
+            "productId": products[0].id,
+            "rating": 4,
+            "comment": "Good product, reasonable price.",
+            "createdAt": None
+        })
+    
+    # Create sample reviews for pets
+    if len(pets) > 0:
+        await prisma.review.create(data={
+            "userId": "temp_user",
+            "petId": pets[0].id,
+            "rating": 5,
+            "comment": "Max is the sweetest dog! Perfect family pet.",
+            "createdAt": None
+        })
+    
+    # Create sample addresses
+    await prisma.useraddress.create(data={
+        "userId": "temp_user",
+        "street": "123 Main Street",
+        "city": "Nairobi",
+        "state": "Nairobi County",
+        "zipCode": "00100",
+        "country": "Kenya",
+        "isDefault": True
+    })
+    await prisma.useraddress.create(data={
+        "userId": "temp_user",
+        "street": "456 Oak Avenue",
+        "city": "Mombasa",
+        "state": "Coast County",
+        "zipCode": "80100",
+        "country": "Kenya",
+        "isDefault": False
+    })
+    
+    # Create sample messages
+    await prisma.message.create(data={
+        "senderId": "demo_user",
+        "recipientId": "temp_user",
+        "content": "Hi! I'm interested in the Golden Retriever. Is Max still available?",
+        "read": False
+    })
+    await prisma.message.create(data={
+        "senderId": "temp_user",
+        "recipientId": "demo_user",
+        "content": "Yes, Max is available! When would you like to schedule a viewing?",
+        "read": False
+    })
     
     print("✅ Database seeded successfully!")
+    print("   - Created 3 pets")
+    print("   - Created 3 products")
+    print("   - Created 3 reviews (2 product + 1 pet)")
+    print("   - Created 2 addresses")
+    print("   - Created 2 messages")
     await prisma.disconnect()
 
 if __name__ == "__main__":
