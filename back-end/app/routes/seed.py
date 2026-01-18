@@ -5,7 +5,20 @@ import os
 
 router = APIRouter(prefix="/seed", tags=["seed"])
 
-@router.post("/init-schema")
+@router.post("/clear")
+async def clear_database():
+    """Clear all data from database"""
+    try:
+        await prisma_client.cartitem.delete_many()
+        await prisma_client.wishlist.delete_many()
+        await prisma_client.orderitem.delete_many()
+        await prisma_client.order.delete_many()
+        await prisma_client.pet.delete_many()
+        await prisma_client.product.delete_many()
+        await prisma_client.user.delete_many()
+        return {"message": "✅ Database cleared successfully!"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Clear failed: {str(e)}")
 async def init_schema():
     """Initialize database schema using Prisma"""
     try:
