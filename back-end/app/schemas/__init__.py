@@ -3,19 +3,19 @@ from typing import Optional, List
 from datetime import datetime
 
 class UserBase(BaseModel):
-    eml: str
+    email: str
     name: str
 
 class UserRegister(UserBase):
     password: str
 
 class UserLogin(BaseModel):
-    eml: str
+    email: str
     password: str
 
 class UserResponse(UserBase):
     id: str
-    fbaseUid: str
+    firebaseUid: str
     phone: Optional[str] = None
     address: Optional[str] = None
     city: Optional[str] = None
@@ -54,7 +54,7 @@ class PetCreate(BaseModel):
     breederRating: float = 5.0
     shelterName: Optional[str] = None
     price: float
-    avlble: bool = True
+    available: bool = True
 
 class PetResponse(PetCreate):
     id: str

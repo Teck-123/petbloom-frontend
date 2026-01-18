@@ -19,7 +19,7 @@ function Home() {
     queryKey: ['featuredPets'],
     queryFn: async () => {
       const response = await api.get('/pets?limit=6')
-      return response.data
+      return response.data.data || response.data
     }
   })
 
@@ -28,7 +28,7 @@ function Home() {
     queryKey: ['featuredProducts'],
     queryFn: async () => {
       const response = await api.get('/products?limit=6')
-      return response.data
+      return response.data.data || response.data
     }
   })
 
@@ -193,7 +193,7 @@ function Home() {
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{pet.name}</h3>
                     <p className="text-gray-600 mb-2">{pet.breed} • {pet.age} years old</p>
-                    <p className="text-lg font-bold text-primary-500 mb-4">${pet.adoptionFee}</p>
+                    <p className="text-lg font-bold text-primary-500 mb-4">${pet.price}</p>
                     <Link
                       to={`/pets/${pet.id}`}
                       className="w-full bg-primary-500 text-white text-center py-2 rounded-md hover:bg-primary-600 transition-colors block"

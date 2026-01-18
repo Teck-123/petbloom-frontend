@@ -16,12 +16,12 @@ async def get_wishlist(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/{user_id}", response_model=WishlistResponse)
-async def add_to_wishlist(user_id: str, item: WishlistCreate):
+@router.post("", response_model=WishlistResponse)
+async def add_to_wishlist(item: WishlistCreate):
     try:
         existing = await prisma_client.wishlist.find_first(
             where={
-                "userId": user_id,
+                "userId": "temp_user",
                 "productId": item.productId,
                 "petId": item.petId
             }
@@ -32,7 +32,7 @@ async def add_to_wishlist(user_id: str, item: WishlistCreate):
         
         wishlist_item = await prisma_client.wishlist.create(
             data={
-                "userId": user_id,
+                "userId": "temp_user",
                 "productId": item.productId,
                 "petId": item.petId
             }

@@ -16,8 +16,8 @@ async def get_cart(user_id: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/{user_id}", response_model=CartItemResponse)
-async def add_to_cart(user_id: str, item: CartItemCreate):
+@router.post("", response_model=CartItemResponse)
+async def add_to_cart(item: CartItemCreate):
     try:
         price = 0
         if item.productId:
@@ -29,7 +29,7 @@ async def add_to_cart(user_id: str, item: CartItemCreate):
         
         cart_item = await prisma_client.cartitem.create(
             data={
-                "userId": user_id,
+                "userId": "temp_user",
                 "productId": item.productId,
                 "petId": item.petId,
                 "quantity": item.quantity,

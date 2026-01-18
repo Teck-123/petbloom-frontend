@@ -1,3 +1,15 @@
+/**
+ * Footer Component
+ * 
+ * Site-wide footer with company information and links
+ * Features:
+ * - Company description and social media links
+ * - Quick navigation links
+ * - Contact information (email, phone, address)
+ * - Copyright and legal links (Privacy Policy, Terms)
+ * 
+ * @component
+ */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { PawPrint, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react'

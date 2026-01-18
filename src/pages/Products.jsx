@@ -44,7 +44,7 @@ function Products() {
       })
       
       const response = await api.get(`/products?${params}`)
-      return response.data
+      return response.data.data || response.data
     }
   })
 

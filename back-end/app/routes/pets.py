@@ -5,14 +5,35 @@ from app.services.prisma_client import prisma_client
 
 router = APIRouter(prefix="/pets", tags=["pets"])
 
-@router.get("", response_model=List[PetResponse])
-async def get_pets(skip: int = 0, limit: int = 20, species: str = None, avlble: bool = True):
+@router.get("/species/list")
+async def get_species_list():
     try:
-        where_clause = {"avlble": avlble}
+        pets = await prisma_client.pet.find_many(select={"species": True})
+        species = list(set([pet.species for pet in pets]))
+        return species
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/breeds/{species}")
+async def get_breeds_by_species(species: str):
+    try:
+        pets = await prisma_client.pet.find_many(where={"species": species}, select={"breed": True})
+        breeds = list(set([pet.breed for pet in pets]))
+        return breeds
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("")
+async def get_pets(skip: int = 0, limit: int = 20, species: str = None, available: bool = True):
+    try:
+        where_clause = {"available": available}
         if species:
             where_clause["species"] = species
+        
         pets = await prisma_client.pet.find_many(where=where_clause, skip=skip, take=limit, order={"createdAt": "desc"})
-        return pets
+        total = await prisma_client.pet.count(where=where_clause)
+        
+        return {"data": pets, "total": total}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

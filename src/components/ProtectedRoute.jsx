@@ -1,3 +1,15 @@
+/**
+ * ProtectedRoute Component
+ * 
+ * Higher-order component that protects routes requiring authentication
+ * - Redirects unauthenticated users to login page
+ * - Shows loading spinner while checking auth status
+ * - Renders children only for authenticated users
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to protect
+ */
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'

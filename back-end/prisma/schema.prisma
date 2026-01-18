@@ -10,9 +10,9 @@ datasource db {
 
 model User {
   id           String   @id @default(cuid())
-  eml          String   @unique
+  email        String   @unique
   name         String
-  fbaseUid     String   @unique
+  firebaseUid  String   @unique
   phone        String?
   address      String?
   city         String?
@@ -43,7 +43,7 @@ model Pet {
   breederRating Float    @default(5.0)
   shelterName   String?
   price         Float
-  avlble        Boolean  @default(true)
+  available     Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   cartItems     CartItem[]

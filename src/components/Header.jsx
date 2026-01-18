@@ -1,3 +1,16 @@
+/**
+ * Header Component
+ * 
+ * Main navigation bar with responsive design
+ * Features:
+ * - Logo and brand name
+ * - Navigation links (Home, Pets, Products, About, Contact)
+ * - Search functionality
+ * - User authentication menu (login/logout, cart, wishlist)
+ * - Mobile responsive hamburger menu
+ * 
+ * @component
+ */
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'

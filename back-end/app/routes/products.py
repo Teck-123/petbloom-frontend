@@ -5,7 +5,25 @@ from app.services.prisma_client import prisma_client
 
 router = APIRouter(prefix="/products", tags=["products"])
 
-@router.get("", response_model=List[ProductResponse])
+@router.get("/categories/list")
+async def get_categories_list():
+    try:
+        products = await prisma_client.product.find_many(select={"category": True})
+        categories = list(set([p.category for p in products]))
+        return categories
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/brands/list")
+async def get_brands_list():
+    try:
+        products = await prisma_client.product.find_many(select={"brand": True})
+        brands = list(set([p.brand for p in products if p.brand]))
+        return brands
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("")
 async def get_products(skip: int = 0, limit: int = 20, category: str = None, petType: str = None):
     try:
         where_clause = {}
@@ -13,8 +31,11 @@ async def get_products(skip: int = 0, limit: int = 20, category: str = None, pet
             where_clause["category"] = category
         if petType:
             where_clause["petType"] = petType
+        
         products = await prisma_client.product.find_many(where=where_clause, skip=skip, take=limit, order={"createdAt": "desc"})
-        return products
+        total = await prisma_client.product.count(where=where_clause)
+        
+        return {"data": products, "total": total}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
