@@ -1,7 +1,28 @@
 from fastapi import APIRouter, HTTPException
 from app.services.prisma_client import prisma_client
+import subprocess
+import os
 
 router = APIRouter(prefix="/seed", tags=["seed"])
+
+@router.post("/init-schema")
+async def init_schema():
+    """Initialize database schema using Prisma"""
+    try:
+        # Run prisma db push to create tables
+        result = subprocess.run(
+            ["prisma", "db", "push", "--skip-generate"],
+            cwd=os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            return {"message": "Schema initialized", "details": result.stdout}
+        
+        return {"message": "✅ Schema initialized successfully!"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Schema init failed: {str(e)}")
 
 @router.post("/init")
 async def seed_database():

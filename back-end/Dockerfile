@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN prisma generate
+RUN prisma db push --skip-generate || true
 
 EXPOSE 8000
 
