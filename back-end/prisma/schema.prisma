@@ -25,6 +25,10 @@ model User {
   cartItems    CartItem[]
   wishlistItems Wishlist[]
   orders       Order[]
+  reviews      Review[]
+  addresses    UserAddress[]
+  sentMessages Message[] @relation("Sender")
+  receivedMessages Message[] @relation("Recipient")
 }
 
 model Pet {
@@ -49,6 +53,7 @@ model Pet {
   cartItems     CartItem[]
   wishlistItems Wishlist[]
   orderItems    OrderItem[]
+  reviews       Review[]
 }
 
 model Product {
@@ -67,6 +72,7 @@ model Product {
   cartItems   CartItem[]
   wishlistItems Wishlist[]
   orderItems  OrderItem[]
+  reviews     Review[]
 }
 
 model CartItem {
@@ -119,5 +125,47 @@ model OrderItem {
   pet       Pet?     @relation(fields: [petId], references: [id], onDelete: SetNull)
   quantity  Int
   price     Float
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  petId     String?
+  pet       Pet?     @relation(fields: [petId], references: [id], onDelete: Cascade)
+  rating    Int      @db.SmallInt
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, productId])
+  @@unique([userId, petId])
+}
+
+model UserAddress {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String   @default("Kenya")
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  senderId  String
+  sender    User     @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId String
+  recipient User     @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  content   String
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
