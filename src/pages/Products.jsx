@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { 
-  Filter, 
-  Search, 
+import {
+  Filter,
+  Search,
   Heart,
   ShoppingCart,
   ChevronLeft,
@@ -18,7 +18,7 @@ function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
   const { currentUser } = useAuth()
-  
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 12
@@ -42,30 +42,13 @@ function Products() {
         ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
         ...(searchQuery && { search: searchQuery })
       })
-      
+
       const response = await api.get(`/products?${params}`)
       return response.data.data || response.data
     }
   })
 
-  // Fetch categories and brands for filters
-  const { data: categoriesList } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const response = await api.get('/products/categories/list')
-      return response.data
-    }
-  })
-
-  const { data: brandsList } = useQuery({
-    queryKey: ['brands'],
-    queryFn: async () => {
-      const response = await api.get('/products/brands/list')
-      return response.data
-    }
-  })
-
-  const petTypes = ['dog', 'cat', 'bird', 'fish', 'reptile', 'small_animal']
+  const petTypes = ['dogs', 'cats']
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({ ...prev, [key]: value }))
@@ -113,7 +96,7 @@ function Products() {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Oops! Something went wrong</h2>
           <p className="text-gray-600 mb-4">Failed to load products. Please try again.</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="btn-primary"
           >
@@ -146,7 +129,6 @@ function Products() {
                   onClick={() => {
                     setFilters({
                       category: '',
-                      brand: '',
                       petType: '',
                       minPrice: '',
                       maxPrice: ''
@@ -182,28 +164,11 @@ function Products() {
                   className="select w-full"
                 >
                   <option value="">All Categories</option>
-                  {categoriesList?.map((category) => (
-                    <option key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Brand Filter */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Brand</label>
-                <select
-                  value={filters.brand}
-                  onChange={(e) => handleFilterChange('brand', e.target.value)}
-                  className="select w-full"
-                >
-                  <option value="">All Brands</option>
-                  {brandsList?.map((brand) => (
-                    <option key={brand} value={brand}>
-                      {brand}
-                    </option>
-                  ))}
+                  <option value="food">Food</option>
+                  <option value="toys">Toys</option>
+                  <option value="habitats">Habitats</option>
+                  <option value="accessories">Accessories</option>
+                  <option value="grooming">Grooming</option>
                 </select>
               </div>
 
@@ -216,11 +181,8 @@ function Products() {
                   className="select w-full"
                 >
                   <option value="">All Pet Types</option>
-                  {petTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </option>
-                  ))}
+                  <option value="dogs">Dogs</option>
+                  <option value="cats">Cats</option>
                 </select>
               </div>
 
@@ -321,9 +283,8 @@ function Products() {
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-4 w-4 ${
-                                i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                              }`}
+                              className={`h-4 w-4 ${i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                }`}
                             />
                           ))}
                           <span className="ml-1 text-sm text-gray-600">(4.0)</span>
@@ -365,21 +326,20 @@ function Products() {
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
-                    
+
                     {[...Array(totalPages)].map((_, i) => (
                       <button
                         key={i + 1}
                         onClick={() => setCurrentPage(i + 1)}
-                        className={`px-3 py-2 rounded-md text-sm font-medium ${
-                          currentPage === i + 1
+                        className={`px-3 py-2 rounded-md text-sm font-medium ${currentPage === i + 1
                             ? 'bg-primary-500 text-white'
                             : 'border border-gray-300 hover:bg-gray-50'
-                        }`}
+                          }`}
                       >
                         {i + 1}
                       </button>
                     ))}
-                    
+
                     <button
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}

@@ -96,7 +96,7 @@ function App() {
                   },
                 }}
               />
-              <DatabaseSeeder />
+              {import.meta.env.MODE === 'development' && <DatabaseSeeder />}
             </div>
           </Router>
         </AuthProvider>

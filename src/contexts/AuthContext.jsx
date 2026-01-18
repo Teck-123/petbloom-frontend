@@ -40,10 +40,13 @@ export function AuthProvider({ children }) {
         try {
           const idToken = await user.getIdToken()
           setToken(idToken)
-
-          // Login to backend with Firebase token
-          const response = await api.post('/auth/login', { token: idToken })
-          setCurrentUser(response.data)
+          // Set user from Firebase, don't wait for backend auth
+          setCurrentUser({
+            id: user.uid,
+            email: user.email,
+            name: user.displayName || 'User'
+          })
+          api.defaults.headers.common['Authorization'] = `Bearer ${idToken}`
         } catch (error) {
           console.error('Auth error:', error)
           setCurrentUser(null)
@@ -52,6 +55,7 @@ export function AuthProvider({ children }) {
       } else {
         setCurrentUser(null)
         setToken(null)
+        delete api.defaults.headers.common['Authorization']
       }
       setLoading(false)
     })
