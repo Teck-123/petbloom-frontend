@@ -4,9 +4,8 @@ from app.config import get_settings
 import os
 import json
 
-settings = get_settings()
-
 def init_fbase():
+    settings = get_settings()
     if not firebase_admin._apps:
         cred_path = settings.FBASE_CREDENTIALS
         try:
