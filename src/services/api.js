@@ -1,7 +1,14 @@
 import axios from 'axios'
 
+// Determine API URL based on environment
+let baseURL = import.meta.env.VITE_API_URL
+if (!baseURL || baseURL.includes('localhost')) {
+  // For Vercel/production, use the local machine's IP or fallback to demo
+  baseURL = 'http://localhost:8000/api/v1'
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -23,6 +23,13 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null)
 
   useEffect(() => {
+    // Skip auth initialization if Firebase is not available (demo mode)
+    if (!auth) {
+      console.log('[Auth] Firebase not initialized - running in demo mode')
+      setLoading(false)
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
