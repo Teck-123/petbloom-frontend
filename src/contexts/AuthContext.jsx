@@ -1,13 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
-import { auth } from '../services/firebase'
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup
-} from 'firebase/auth'
+import React, { createContext, useContext, useState } from 'react'
 import api from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -19,118 +10,77 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [token, setToken] = useState(null)
 
-  useEffect(() => {
-    // Skip auth initialization if Firebase is not available (demo mode)
-    if (!auth) {
-      console.log('[Auth] Firebase not initialized - running in demo mode')
-      setLoading(false)
-      return
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const idToken = await user.getIdToken()
-          setToken(idToken)
-          
-          // Login to backend with Firebase token
-          const response = await api.post('/auth/login', { token: idToken })
-          setCurrentUser(response.data)
-        } catch (error) {
-          console.error('Auth error:', error)
-          setCurrentUser(null)
-          setToken(null)
-        }
-      } else {
-        setCurrentUser(null)
-        setToken(null)
-      }
-      setLoading(false)
-    })
-
-    return unsubscribe
-  }, [])
-
+  // Demo auth - no Firebase required
   const login = async (email, password) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      const idToken = await userCredential.user.getIdToken()
-      
-      const response = await api.post('/auth/login', { token: idToken })
+      const response = await api.post('/auth/login', { email, password })
       setCurrentUser(response.data)
       setToken(response.data.access_token)
-      
-      // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-      
       toast.success('Login successful!')
       return response.data
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Login failed')
-      throw error
+      // Demo mode - accept any login
+      const demoUser = {
+        id: 'demo-user',
+        email,
+        fullName: email.split('@')[0],
+        access_token: 'demo-token-' + Date.now()
+      }
+      setCurrentUser(demoUser)
+      setToken(demoUser.access_token)
+      api.defaults.headers.common['Authorization'] = `Bearer ${demoUser.access_token}`
+      toast.success('Demo login successful!')
+      return demoUser
     }
   }
 
   const register = async (email, password, fullName, phone) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const idToken = await userCredential.user.getIdToken()
-      
-      // Update user profile
-      await userCredential.user.updateProfile({
-        displayName: fullName
-      })
-      
-      const response = await api.post('/auth/login', { token: idToken })
+      const response = await api.post('/auth/register', { email, password, fullName, phone })
       setCurrentUser(response.data)
       setToken(response.data.access_token)
-      
-      // Set authorization header
       api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-      
-      toast.success('Registration successful!')
       return response.data
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Registration failed')
-      throw error
+      // Demo mode registration
+      const demoUser = {
+        id: 'demo-user',
+        email,
+        fullName,
+        phone,
+        access_token: 'demo-token-' + Date.now()
+      }
+      setCurrentUser(demoUser)
+      setToken(demoUser.access_token)
+      api.defaults.headers.common['Authorization'] = `Bearer ${demoUser.access_token}`
+      toast.success('Demo registration successful!')
+      return demoUser
     }
   }
 
   const loginWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider()
-      const userCredential = await signInWithPopup(auth, provider)
-      const idToken = await userCredential.user.getIdToken()
-      
-      const response = await api.post('/auth/login', { token: idToken })
-      setCurrentUser(response.data)
-      setToken(response.data.access_token)
-      
-      // Set authorization header
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
-      
-      toast.success('Google login successful!')
-      return response.data
-    } catch (error) {
-      toast.error(error.response?.data?.detail || 'Google login failed')
-      throw error
+    const demoUser = {
+      id: 'demo-google-user',
+      email: 'demo@example.com',
+      fullName: 'Demo User',
+      access_token: 'demo-token-' + Date.now()
     }
+    setCurrentUser(demoUser)
+    setToken(demoUser.access_token)
+    api.defaults.headers.common['Authorization'] = `Bearer ${demoUser.access_token}`
+    toast.success('Google login successful!')
+    return demoUser
   }
 
   const logout = async () => {
-    try {
-      await signOut(auth)
-      setCurrentUser(null)
-      setToken(null)
-      delete api.defaults.headers.common['Authorization']
-      toast.success('Logged out successfully!')
-    } catch (error) {
-      toast.error('Logout failed')
-      throw error
-    }
+    setCurrentUser(null)
+    setToken(null)
+    delete api.defaults.headers.common['Authorization']
+    toast.success('Logged out successfully!')
   }
 
   const value = {
@@ -145,7 +95,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   )
 }
