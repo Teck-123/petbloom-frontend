@@ -13,22 +13,50 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import api from '../services/api'
 
+const DEMO_PETS = [
+  { id: '1', name: 'Golden Retriever', type: 'dog', price: 1200, image: 'https://via.placeholder.com/200?text=Dog' },
+  { id: '2', name: 'Persian Cat', type: 'cat', price: 800, image: 'https://via.placeholder.com/200?text=Cat' },
+  { id: '3', name: 'Cockatiel', type: 'bird', price: 200, image: 'https://via.placeholder.com/200?text=Bird' },
+  { id: '4', name: 'Labrador', type: 'dog', price: 1000, image: 'https://via.placeholder.com/200?text=Puppy' },
+  { id: '5', name: 'Bengal Cat', type: 'cat', price: 1500, image: 'https://via.placeholder.com/200?text=Bengal' },
+  { id: '6', name: 'Parrot', type: 'bird', price: 300, image: 'https://via.placeholder.com/200?text=Parrot' },
+]
+
+const DEMO_PRODUCTS = [
+  { id: '1', name: 'Dog Food Premium', price: 45, image: 'https://via.placeholder.com/200?text=Dog+Food' },
+  { id: '2', name: 'Cat Toys Set', price: 20, image: 'https://via.placeholder.com/200?text=Cat+Toys' },
+  { id: '3', name: 'Pet Collar', price: 15, image: 'https://via.placeholder.com/200?text=Collar' },
+  { id: '4', name: 'Bird Cage', price: 120, image: 'https://via.placeholder.com/200?text=Cage' },
+  { id: '5', name: 'Leash & Harness', price: 30, image: 'https://via.placeholder.com/200?text=Leash' },
+  { id: '6', name: 'Pet Bed', price: 60, image: 'https://via.placeholder.com/200?text=Bed' },
+]
+
 function Home() {
   // Fetch featured pets
-  const { data: featuredPets, isLoading: petsLoading } = useQuery({
+  const { data: featuredPets = DEMO_PETS, isLoading: petsLoading, error: petsError } = useQuery({
     queryKey: ['featuredPets'],
     queryFn: async () => {
-      const response = await api.get('/pets?limit=6')
-      return response.data.data || response.data
+      try {
+        const response = await api.get('/pets?limit=6')
+        return response.data.data || response.data || DEMO_PETS
+      } catch (err) {
+        console.log('Using demo pets')
+        return DEMO_PETS
+      }
     }
   })
 
   // Fetch featured products
-  const { data: featuredProducts, isLoading: productsLoading } = useQuery({
+  const { data: featuredProducts = DEMO_PRODUCTS, isLoading: productsLoading, error: productsError } = useQuery({
     queryKey: ['featuredProducts'],
     queryFn: async () => {
-      const response = await api.get('/products?limit=6')
-      return response.data.data || response.data
+      try {
+        const response = await api.get('/products?limit=6')
+        return response.data.data || response.data || DEMO_PRODUCTS
+      } catch (err) {
+        console.log('Using demo products')
+        return DEMO_PRODUCTS
+      }
     }
   })
 
