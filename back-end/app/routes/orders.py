@@ -1,12 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from app.schemas import OrderResponse, OrderCreate
 from app.services.prisma_client import prisma_client
+from app.services.auth_helper import get_current_user_id
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
-@router.get("/user/{user_id}", response_model=List[OrderResponse])
-async def get_user_orders(user_id: str, status: str = None):
+@router.get("", response_model=List[OrderResponse])
+async def get_user_orders(status: str = None, user_id: str = Depends(get_current_user_id)):
     try:
         where_clause = {"userId": user_id}
         if status:
@@ -21,17 +22,21 @@ async def get_user_orders(user_id: str, status: str = None):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{order_id}", response_model=OrderResponse)
-async def get_order(order_id: str):
+async def get_order(order_id: str, user_id: str = Depends(get_current_user_id)):
     try:
         order = await prisma_client.order.find_unique(where={"id": order_id})
         if not order:
             raise HTTPException(status_code=404, detail="Order not found")
+        if order.userId != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized to view this order")
         return order
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/{user_id}", response_model=OrderResponse)
-async def create_order(user_id: str, order: OrderCreate):
+@router.post("", response_model=OrderResponse)
+async def create_order(order: OrderCreate, user_id: str = Depends(get_current_user_id)):
     try:
         cart_items = await prisma_client.cartitem.find_many(
             where={"userId": user_id}
@@ -70,23 +75,39 @@ async def create_order(user_id: str, order: OrderCreate):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/{order_id}/status")
-async def update_order_status(order_id: str, status: str):
+async def update_order_status(order_id: str, status: str, user_id: str = Depends(get_current_user_id)):
     try:
+        order = await prisma_client.order.find_unique(where={"id": order_id})
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        if order.userId != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized to update this order")
+        
         updated_order = await prisma_client.order.update(
             where={"id": order_id},
             data={"status": status}
         )
         return updated_order
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/{order_id}/tracking")
-async def update_tracking(order_id: str, tracking_number: str):
+async def update_tracking(order_id: str, tracking_number: str, user_id: str = Depends(get_current_user_id)):
     try:
+        order = await prisma_client.order.find_unique(where={"id": order_id})
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        if order.userId != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized to update this order")
+        
         updated_order = await prisma_client.order.update(
             where={"id": order_id},
             data={"trackingNumber": tracking_number}
         )
         return updated_order
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

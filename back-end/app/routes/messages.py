@@ -1,15 +1,16 @@
-from fastapi import APIRouter, HTTPException, Header
+from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 from app.schemas import MessageCreate, MessageResponse
 from app.services.prisma_client import prisma_client
+from app.services.auth_helper import get_current_user_id
 
 router = APIRouter(prefix="/messages", tags=["messages"])
 
 @router.get("/inbox")
-async def get_inbox(authorization: Optional[str] = Header(None)):
+async def get_inbox(user_id: str = Depends(get_current_user_id)):
     """Get all messages for the current user"""
     try:
-        userId = "temp_user"  # In production, extract from token
+        userId = user_id
         
         messages = await prisma_client.message.find_many(
             where={"recipientId": userId},
@@ -20,10 +21,10 @@ async def get_inbox(authorization: Optional[str] = Header(None)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/conversation/{sender_id}")
-async def get_conversation(sender_id: str, authorization: Optional[str] = Header(None)):
+async def get_conversation(sender_id: str, user_id: str = Depends(get_current_user_id)):
     """Get conversation with a specific user"""
     try:
-        userId = "temp_user"  # In production, extract from token
+        userId = user_id
         
         messages = await prisma_client.message.find_many(
             where={
@@ -50,10 +51,10 @@ async def get_conversation(sender_id: str, authorization: Optional[str] = Header
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("", response_model=MessageResponse)
-async def send_message(message: MessageCreate, authorization: Optional[str] = Header(None)):
+async def send_message(message: MessageCreate, user_id: str = Depends(get_current_user_id)):
     """Send a message"""
     try:
-        senderId = "temp_user"  # In production, extract from token
+        senderId = user_id
         
         if senderId == message.recipientId:
             raise HTTPException(status_code=400, detail="You cannot send messages to yourself")
@@ -73,10 +74,10 @@ async def send_message(message: MessageCreate, authorization: Optional[str] = He
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{message_id}", response_model=MessageResponse)
-async def get_message(message_id: str, authorization: Optional[str] = Header(None)):
+async def get_message(message_id: str, user_id: str = Depends(get_current_user_id)):
     """Get a specific message"""
     try:
-        userId = "temp_user"  # In production, extract from token
+        userId = user_id
         
         message = await prisma_client.message.find_unique(where={"id": message_id})
         if not message:
@@ -93,10 +94,10 @@ async def get_message(message_id: str, authorization: Optional[str] = Header(Non
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.patch("/{message_id}/read")
-async def mark_message_read(message_id: str, authorization: Optional[str] = Header(None)):
+async def mark_message_read(message_id: str, user_id: str = Depends(get_current_user_id)):
     """Mark a message as read"""
     try:
-        userId = "temp_user"  # In production, extract from token
+        userId = user_id
         
         message = await prisma_client.message.find_unique(where={"id": message_id})
         if not message:

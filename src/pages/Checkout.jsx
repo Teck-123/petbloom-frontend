@@ -29,19 +29,10 @@ function Checkout() {
   const createOrder = useMutation({
     mutationFn: async (formData) => {
       const orderData = {
-        shippingAddress: formData.address,
-        shippingCity: formData.city,
-        shippingState: formData.state,
-        shippingZip: formData.zipCode,
-        shippingMethod: formData.shippingMethod || 'standard',
-        notes: formData.notes,
-        items: cartItems.map(item => ({
-          productId: item.productId,
-          petId: item.petId,
-          quantity: item.quantity,
-          unitPrice: item.product ? item.product.price : (item.pet ? item.pet.adoptionFee : 0),
-          totalPrice: (item.product ? item.product.price : (item.pet ? item.pet.adoptionFee : 0)) * item.quantity
-        }))
+        shippingAddress: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}`,
+        deliveryOption: formData.shippingMethod || 'standard',
+        pickupLocation: null,
+        notes: formData.notes
       }
 
       const response = await api.post('/orders', orderData)
@@ -63,7 +54,7 @@ function Checkout() {
   const calculateSubtotal = () => {
     if (!cartItems) return 0
     return cartItems.reduce((total, item) => {
-      const price = item.product ? item.product.price : (item.pet ? item.pet.adoptionFee : 0)
+      const price = item.product ? item.product.price : (item.pet ? item.pet.price : 0)
       return total + (price * item.quantity)
     }, 0)
   }

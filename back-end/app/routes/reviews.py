@@ -1,29 +1,16 @@
-from fastapi import APIRouter, HTTPException, Header
+from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 from app.schemas import ReviewCreate, ReviewResponse
 from app.services.prisma_client import prisma_client
-from app.routes.users import get_current_user
+from app.services.auth_helper import get_current_user_id
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
 
-def get_user_from_token(authorization: Optional[str] = Header(None)):
-    """Extract user from token"""
-    if not authorization:
-        return None
-    try:
-        scheme, token = authorization.split()
-        if scheme.lower() != "bearer":
-            return None
-    except ValueError:
-        return None
-    return None  # In production, decode token here
-
 @router.post("", response_model=ReviewResponse)
-async def create_review(review: ReviewCreate, authorization: Optional[str] = Header(None)):
+async def create_review(review: ReviewCreate, user_id: str = Depends(get_current_user_id)):
     """Create a review for a product or pet"""
     try:
-        # In production, extract userId from token
-        userId = "temp_user"
+        userId = user_id
         
         # Validate that either productId or petId is provided
         if not review.productId and not review.petId:
@@ -111,10 +98,10 @@ async def get_review(review_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/{review_id}")
-async def delete_review(review_id: str, authorization: Optional[str] = Header(None)):
+async def delete_review(review_id: str, user_id: str = Depends(get_current_user_id)):
     """Delete a review"""
     try:
-        userId = "temp_user"  # In production, extract from token
+        userId = user_id
         
         review = await prisma_client.review.find_unique(where={"id": review_id})
         if not review:

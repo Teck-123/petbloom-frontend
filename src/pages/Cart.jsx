@@ -1,13 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { 
-  ShoppingCart, 
-  Trash2, 
-  Plus, 
+import {
+  ShoppingCart,
+  Trash2,
+  Plus,
   Minus,
   Heart,
-  ArrowRight
+  ArrowRight,
+  Check
 } from 'lucide-react'
 import api from '../services/api'
 import toast from 'react-hot-toast'
@@ -66,10 +67,19 @@ function Cart() {
     }
   }
 
+  const handleAddToWishlist = async (itemId) => {
+    try {
+      await api.post('/wishlist/items', { product_id: itemId })
+      toast.success('Added to wishlist!')
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Failed to add to wishlist')
+    }
+  }
+
   const calculateTotal = () => {
     if (!cartItems) return 0
     return cartItems.reduce((total, item) => {
-      const price = item.product ? item.product.price : (item.pet ? item.pet.adoptionFee : 0)
+      const price = item.product ? item.product.price : (item.pet ? item.pet.price : 0)
       return total + (price * item.quantity)
     }, 0)
   }
@@ -135,7 +145,7 @@ function Cart() {
                     Clear Cart
                   </button>
                 </div>
-                
+
                 <div className="divide-y divide-gray-200">
                   {cartItems?.map((item) => {
                     const product = item.product
@@ -144,7 +154,7 @@ function Cart() {
                     const price = product ? product.price : (pet ? pet.adoptionFee : 0)
                     const image = product ? product.images?.[0] : (pet ? pet.images?.[0] : '')
                     const name = product ? product.name : (pet ? pet.name : 'Unknown')
-                    const description = product 
+                    const description = product
                       ? `${product.brand} • ${product.category.replace('_', ' ')}`
                       : (pet ? `${pet.breed} • ${pet.age} years old` : '')
 
@@ -158,13 +168,13 @@ function Cart() {
                               className="w-20 h-20 object-cover rounded-md"
                             />
                           </div>
-                          
+
                           <div className="flex-1">
                             <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
                             <p className="text-sm text-gray-600 mb-2">{description}</p>
                             <p className="text-xl font-bold text-primary-500">${price}</p>
                           </div>
-                          
+
                           <div className="flex flex-col items-end space-y-2">
                             {/* Quantity Controls */}
                             <div className="flex items-center space-x-2">
@@ -183,7 +193,7 @@ function Cart() {
                                 <Plus className="h-4 w-4" />
                               </button>
                             </div>
-                            
+
                             {/* Actions */}
                             <div className="flex items-center space-x-2">
                               <button
@@ -199,7 +209,7 @@ function Cart() {
                                 <Trash2 className="h-4 w-4" />
                               </button>
                             </div>
-                            
+
                             {/* Item Total */}
                             <p className="text-sm font-medium text-gray-900">
                               Subtotal: ${(price * item.quantity).toFixed(2)}
@@ -217,7 +227,7 @@ function Cart() {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
-                
+
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
@@ -244,7 +254,7 @@ function Cart() {
                   Proceed to Checkout
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </button>
-                
+
                 <button
                   onClick={() => navigate('/products')}
                   className="w-full btn-outline"

@@ -1,12 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Header
 from typing import List
 from app.schemas import CartItemResponse, CartItemCreate
 from app.services.prisma_client import prisma_client
+from app.services.auth_helper import get_current_user_id
 
 router = APIRouter(prefix="/cart", tags=["cart"])
 
-@router.get("/{user_id}", response_model=List[CartItemResponse])
-async def get_cart(user_id: str):
+@router.get("", response_model=List[CartItemResponse])
+async def get_cart(user_id: str = Depends(get_current_user_id)):
     try:
         cart_items = await prisma_client.cartitem.find_many(
             where={"userId": user_id},
@@ -17,7 +18,7 @@ async def get_cart(user_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("", response_model=CartItemResponse)
-async def add_to_cart(item: CartItemCreate):
+async def add_to_cart(item: CartItemCreate, user_id: str = Depends(get_current_user_id)):
     try:
         price = 0
         if item.productId:
@@ -29,7 +30,7 @@ async def add_to_cart(item: CartItemCreate):
         
         cart_item = await prisma_client.cartitem.create(
             data={
-                "userId": "temp_user",
+                "userId": user_id,
                 "productId": item.productId,
                 "petId": item.petId,
                 "quantity": item.quantity,
@@ -41,26 +42,40 @@ async def add_to_cart(item: CartItemCreate):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/{cart_item_id}", response_model=CartItemResponse)
-async def update_cart_item(cart_item_id: str, quantity: int):
+async def update_cart_item(cart_item_id: str, quantity: int, user_id: str = Depends(get_current_user_id)):
     try:
+        # Verify item belongs to user
+        cart_item = await prisma_client.cartitem.find_unique(where={"id": cart_item_id})
+        if not cart_item or cart_item.userId != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized to update this item")
+        
         updated_item = await prisma_client.cartitem.update(
             where={"id": cart_item_id},
             data={"quantity": quantity}
         )
         return updated_item
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/{cart_item_id}")
-async def remove_from_cart(cart_item_id: str):
+async def remove_from_cart(cart_item_id: str, user_id: str = Depends(get_current_user_id)):
     try:
+        # Verify item belongs to user
+        cart_item = await prisma_client.cartitem.find_unique(where={"id": cart_item_id})
+        if not cart_item or cart_item.userId != user_id:
+            raise HTTPException(status_code=403, detail="Not authorized to delete this item")
+        
         await prisma_client.cartitem.delete(where={"id": cart_item_id})
         return {"message": "Item removed from cart"}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.delete("/{user_id}/clear")
-async def clear_cart(user_id: str):
+@router.delete("")
+async def clear_cart(user_id: str = Depends(get_current_user_id)):
     try:
         await prisma_client.cartitem.delete_many(where={"userId": user_id})
         return {"message": "Cart cleared"}

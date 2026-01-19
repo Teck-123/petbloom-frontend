@@ -80,7 +80,7 @@ function Products() {
     }
 
     try {
-      await api.post('/wishlist', { productId })
+      await api.post('/wishlist/items', { product_id: productId })
       toast.success('Added to wishlist!')
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to add to wishlist')
