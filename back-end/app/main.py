@@ -15,6 +15,14 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="PetBloom API", version="1.0.0")
 
+@app.get("/health")
+async def health():
+    return {"status": "ok", "message": "Backend is running!"}
+
+@app.get("/")
+async def root():
+    return {"message": "PetBloom API is alive!", "version": "1.0.0"}
+
 # CORS - adjust for production
 cors_origins = [settings.FRONTEND_URL]
 if settings.ENVIRONMENT == "development":
