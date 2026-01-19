@@ -19,7 +19,7 @@ export default defineConfig({
   },
   define: {
     global: 'globalThis',
-    'process.env': {},
+    'process.env': '{}',
     __dirname: '""',
   },
   resolve: {
