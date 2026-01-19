@@ -36,47 +36,57 @@ const queryClient = new QueryClient({
 })
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-gray-50">
-            <Header />
-            <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/pets" element={<Pets />} />
-                <Route path="/pets/:id" element={<PetDetail />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetail />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-              </Routes>
-            </main>
-            <Footer />
-            <Toaster 
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#363636',
-                  color: '#fff',
-                },
-              }}
-            />
-          </div>
-        </Router>
-      </AuthProvider>
-    </QueryClientProvider>
-  )
+  try {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen bg-gray-50">
+              <Header />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/pets" element={<Pets />} />
+                  <Route path="/pets/:id" element={<PetDetail />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/:id" element={<ProductDetail />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                </Routes>
+              </main>
+              <Footer />
+              <Toaster 
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#363636',
+                    color: '#fff',
+                  },
+                }}
+              />
+            </div>
+          </Router>
+        </AuthProvider>
+      </QueryClientProvider>
+    )
+  } catch (error) {
+    console.error('App render error:', error)
+    return (
+      <div style={{ padding: '40px', color: '#d32f2f', fontFamily: 'monospace', fontSize: '14px', whiteSpace: 'pre-wrap' }}>
+        <h1>⚠️ App Error</h1>
+        <p>{String(error)}</p>
+      </div>
+    )
+  }
 }
 
 export default App

@@ -6,4 +6,4 @@ export const db = null
 export const storage = null
 
 console.log('[Firebase] Running in demo mode - authentication disabled')
-export default app
+export default null
