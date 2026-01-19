@@ -19,11 +19,19 @@ export default defineConfig({
   },
   define: {
     global: 'globalThis',
+    'process.env': {},
+    __dirname: '""',
+  },
+  resolve: {
+    alias: {
+      'node-fetch': 'isomorphic-fetch',
+    },
   },
   optimizeDeps: {
     esbuildOptions: {
       define: {
         global: 'globalThis',
+        'process.env': {},
       },
     },
   },
