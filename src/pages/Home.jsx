@@ -189,6 +189,10 @@ function Home() {
                     src={pet.images?.[0] || '/placeholder-pet.jpg'}
                     alt={pet.name}
                     className="w-full h-64 object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/400x300?text=Pet+Image';
+                    }}
                   />
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{pet.name}</h3>
@@ -243,6 +247,10 @@ function Home() {
                     src={product.images?.[0] || '/placeholder-product.jpg'}
                     alt={product.name}
                     className="w-full h-64 object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/400x300?text=Product+Image';
+                    }}
                   />
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>

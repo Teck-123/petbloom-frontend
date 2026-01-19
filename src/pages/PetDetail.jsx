@@ -119,6 +119,10 @@ function PetDetail() {
                 src={pet?.images?.[selectedImage] || '/placeholder-pet.jpg'}
                 alt={pet?.name}
                 className="w-full h-96 object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://via.placeholder.com/400x300?text=Pet+Image';
+                }}
               />
             </div>
             
@@ -137,6 +141,10 @@ function PetDetail() {
                       src={image}
                       alt={`${pet.name} ${index + 1}`}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://via.placeholder.com/80x80?text=Pet';
+                      }}
                     />
                   </button>
                 ))}

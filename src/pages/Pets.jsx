@@ -283,6 +283,10 @@ function Pets() {
                           src={pet.images?.[0] || '/placeholder-pet.jpg'}
                           alt={pet.name}
                           className="w-full h-48 object-cover"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://via.placeholder.com/400x300?text=Pet+Image';
+                          }}
                         />
                         <button
                           onClick={() => handleAddToWishlist(pet.id)}
