@@ -12,6 +12,21 @@ import {
 import api from '../services/api'
 import toast from 'react-hot-toast'
 
+const DEMO_PETS = [
+  { id: '1', name: 'Golden Retriever', species: 'dog', breed: 'Golden Retriever', size: 'large', age: 2, price: 1200, image: 'https://via.placeholder.com/300?text=Golden+Retriever', description: 'Friendly and loyal dog' },
+  { id: '2', name: 'Persian Cat', species: 'cat', breed: 'Persian', size: 'small', age: 1, price: 800, image: 'https://via.placeholder.com/300?text=Persian+Cat', description: 'Beautiful and calm cat' },
+  { id: '3', name: 'Cockatiel', species: 'bird', breed: 'Cockatiel', size: 'small', age: 1, price: 200, image: 'https://via.placeholder.com/300?text=Cockatiel', description: 'Colorful talking bird' },
+  { id: '4', name: 'Labrador Puppy', species: 'dog', breed: 'Labrador', size: 'medium', age: 0.5, price: 1000, image: 'https://via.placeholder.com/300?text=Labrador', description: 'Energetic and playful' },
+  { id: '5', name: 'Bengal Cat', species: 'cat', breed: 'Bengal', size: 'medium', age: 1, price: 1500, image: 'https://via.placeholder.com/300?text=Bengal', description: 'Exotic and active cat' },
+  { id: '6', name: 'African Grey Parrot', species: 'bird', breed: 'African Grey', size: 'medium', age: 3, price: 800, image: 'https://via.placeholder.com/300?text=Parrot', description: 'Intelligent and long-lived' },
+  { id: '7', name: 'Beagle', species: 'dog', breed: 'Beagle', size: 'small', age: 1, price: 600, image: 'https://via.placeholder.com/300?text=Beagle', description: 'Curious and friendly' },
+  { id: '8', name: 'Siamese Cat', species: 'cat', breed: 'Siamese', size: 'small', age: 2, price: 900, image: 'https://via.placeholder.com/300?text=Siamese', description: 'Vocal and affectionate' },
+  { id: '9', name: 'Budgerigar', species: 'bird', breed: 'Budgie', size: 'tiny', age: 1, price: 50, image: 'https://via.placeholder.com/300?text=Budgie', description: 'Small and cheerful' },
+  { id: '10', name: 'German Shepherd', species: 'dog', breed: 'German Shepherd', size: 'large', age: 2, price: 1400, image: 'https://via.placeholder.com/300?text=Shepherd', description: 'Loyal and protective' },
+  { id: '11', name: 'Maine Coon', species: 'cat', breed: 'Maine Coon', size: 'large', age: 1.5, price: 1200, image: 'https://via.placeholder.com/300?text=Maine+Coon', description: 'Large and gentle' },
+  { id: '12', name: 'Lovebird Pair', species: 'bird', breed: 'Lovebird', size: 'tiny', age: 1, price: 150, image: 'https://via.placeholder.com/300?text=Lovebirds', description: 'Cute and social birds' },
+]
+
 function Pets() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
@@ -33,15 +48,20 @@ function Pets() {
   const { data: petsData, isLoading, error } = useQuery({
     queryKey: ['pets', currentPage, filters, searchQuery],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        skip: (currentPage - 1) * itemsPerPage,
-        limit: itemsPerPage,
-        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
-        ...(searchQuery && { search: searchQuery })
-      })
-      
-      const response = await api.get(`/pets?${params}`)
-      return response.data
+      try {
+        const params = new URLSearchParams({
+          skip: (currentPage - 1) * itemsPerPage,
+          limit: itemsPerPage,
+          ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
+          ...(searchQuery && { search: searchQuery })
+        })
+        
+        const response = await api.get(`/pets?${params}`)
+        return response.data
+      } catch (err) {
+        console.log('Using demo pets')
+        return { data: DEMO_PETS.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage), total: DEMO_PETS.length }
+      }
     }
   })
 
@@ -49,8 +69,12 @@ function Pets() {
   const { data: speciesList } = useQuery({
     queryKey: ['species'],
     queryFn: async () => {
-      const response = await api.get('/pets/species/list')
-      return response.data
+      try {
+        const response = await api.get('/pets/species/list')
+        return response.data
+      } catch (err) {
+        return ['dog', 'cat', 'bird']
+      }
     }
   })
 
@@ -58,8 +82,12 @@ function Pets() {
     queryKey: ['breeds', filters.species],
     queryFn: async () => {
       if (!filters.species) return []
-      const response = await api.get(`/pets/breeds/${filters.species}`)
-      return response.data
+      try {
+        const response = await api.get(`/pets/breeds/${filters.species}`)
+        return response.data
+      } catch (err) {
+        return []
+      }
     },
     enabled: !!filters.species
   })

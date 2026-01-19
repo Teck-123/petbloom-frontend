@@ -14,6 +14,21 @@ import api from '../services/api'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
 
+const DEMO_PRODUCTS = [
+  { id: '1', name: 'Premium Dog Food', category: 'food', brand: 'PetMax', petType: 'dog', price: 45, image: 'https://via.placeholder.com/300?text=Dog+Food', description: 'Nutritious and delicious' },
+  { id: '2', name: 'Cat Toys Set', category: 'toys', brand: 'PlayPets', petType: 'cat', price: 20, image: 'https://via.placeholder.com/300?text=Cat+Toys', description: '10 interactive toys' },
+  { id: '3', name: 'Adjustable Pet Collar', category: 'accessories', brand: 'SafePets', petType: 'dog', price: 15, image: 'https://via.placeholder.com/300?text=Collar', description: 'Comfortable and durable' },
+  { id: '4', name: 'Large Bird Cage', category: 'housing', brand: 'BirdHome', petType: 'bird', price: 120, image: 'https://via.placeholder.com/300?text=Cage', description: '3ft x 2ft spacious cage' },
+  { id: '5', name: 'Leash and Harness Set', category: 'accessories', brand: 'SafePets', petType: 'dog', price: 30, image: 'https://via.placeholder.com/300?text=Leash', description: 'Safety and comfort' },
+  { id: '6', name: 'Orthopedic Pet Bed', category: 'furniture', brand: 'ComfyPets', petType: 'dog', price: 60, image: 'https://via.placeholder.com/300?text=Bed', description: 'Memory foam support' },
+  { id: '7', name: 'Kitten Starter Pack', category: 'food', brand: 'KittyMax', petType: 'cat', price: 35, image: 'https://via.placeholder.com/300?text=Kitten+Pack', description: 'Everything for kittens' },
+  { id: '8', name: 'Bird Perch and Mirror', category: 'toys', brand: 'BirdToys', petType: 'bird', price: 25, image: 'https://via.placeholder.com/300?text=Perch', description: 'Natural wood perch' },
+  { id: '9', name: 'Pet Grooming Kit', category: 'grooming', brand: 'GroomPro', petType: 'dog', price: 50, image: 'https://via.placeholder.com/300?text=Grooming', description: '8 piece grooming set' },
+  { id: '10', name: 'Interactive Puzzle Feeder', category: 'toys', brand: 'SmartPets', petType: 'cat', price: 18, image: 'https://via.placeholder.com/300?text=Puzzle', description: 'Mental stimulation' },
+  { id: '11', name: 'Pet First Aid Kit', category: 'health', brand: 'SafePets', petType: 'dog', price: 40, image: 'https://via.placeholder.com/300?text=First+Aid', description: 'Complete medical supplies' },
+  { id: '12', name: 'Automatic Water Fountain', category: 'accessories', brand: 'HydroPets', petType: 'cat', price: 55, image: 'https://via.placeholder.com/300?text=Fountain', description: 'Circulating fresh water' },
+]
+
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
@@ -36,15 +51,20 @@ function Products() {
   const { data: productsData, isLoading, error } = useQuery({
     queryKey: ['products', currentPage, filters, searchQuery],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        skip: (currentPage - 1) * itemsPerPage,
-        limit: itemsPerPage,
-        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
-        ...(searchQuery && { search: searchQuery })
-      })
-      
-      const response = await api.get(`/products?${params}`)
-      return response.data.data || response.data
+      try {
+        const params = new URLSearchParams({
+          skip: (currentPage - 1) * itemsPerPage,
+          limit: itemsPerPage,
+          ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
+          ...(searchQuery && { search: searchQuery })
+        })
+        
+        const response = await api.get(`/products?${params}`)
+        return response.data.data || response.data
+      } catch (err) {
+        console.log('Using demo products')
+        return { data: DEMO_PRODUCTS.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage), total: DEMO_PRODUCTS.length }
+      }
     }
   })
 
@@ -52,16 +72,24 @@ function Products() {
   const { data: categoriesList } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const response = await api.get('/products/categories/list')
-      return response.data
+      try {
+        const response = await api.get('/products/categories/list')
+        return response.data
+      } catch (err) {
+        return ['food', 'toys', 'accessories', 'housing', 'furniture', 'grooming', 'health']
+      }
     }
   })
 
   const { data: brandsList } = useQuery({
     queryKey: ['brands'],
     queryFn: async () => {
-      const response = await api.get('/products/brands/list')
-      return response.data
+      try {
+        const response = await api.get('/products/brands/list')
+        return response.data
+      } catch (err) {
+        return ['PetMax', 'PlayPets', 'SafePets', 'ComfyPets', 'BirdHome']
+      }
     }
   })
 
