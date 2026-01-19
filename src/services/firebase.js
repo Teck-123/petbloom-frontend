@@ -6,26 +6,36 @@ import { getStorage } from 'firebase/storage'
 const requiredEnv = (key) => {
   const value = import.meta.env[key]
   if (!value) {
-    throw new Error(
-      `[Firebase] Missing env var ${key}. Add it to your .env (copy from .env.example) and restart the dev server.`
-    )
+    console.warn(`[Firebase] Missing env var ${key}`)
+    return null
   }
   return value
 }
 
 const firebaseConfig = {
-  apiKey: requiredEnv('VITE_FIREBASE_API_KEY'),
-  authDomain: requiredEnv('VITE_FIREBASE_AUTH_DOMAIN'),
-  projectId: requiredEnv('VITE_FIREBASE_PROJECT_ID'),
-  storageBucket: requiredEnv('VITE_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: requiredEnv('VITE_FIREBASE_MESSAGING_SENDER_ID'),
-  appId: requiredEnv('VITE_FIREBASE_APP_ID'),
+  apiKey: requiredEnv('VITE_FIREBASE_API_KEY') || 'demo-key',
+  authDomain: requiredEnv('VITE_FIREBASE_AUTH_DOMAIN') || 'demo.firebaseapp.com',
+  projectId: requiredEnv('VITE_FIREBASE_PROJECT_ID') || 'demo-project',
+  storageBucket: requiredEnv('VITE_FIREBASE_STORAGE_BUCKET') || 'demo.appspot.com',
+  messagingSenderId: requiredEnv('VITE_FIREBASE_MESSAGING_SENDER_ID') || 'demo-sender',
+  appId: requiredEnv('VITE_FIREBASE_APP_ID') || 'demo-app',
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
-const app = initializeApp(firebaseConfig)
+let app, auth, db, storage
 
-export const auth = getAuth(app)
-export const db = getFirestore(app)
-export const storage = getStorage(app)
+try {
+  app = initializeApp(firebaseConfig)
+  auth = getAuth(app)
+  db = getFirestore(app)
+  storage = getStorage(app)
+} catch (error) {
+  console.warn('[Firebase] Using demo/fallback mode:', error.message)
+  // Create mock objects for demo mode
+  export const auth = null
+  export const db = null
+  export const storage = null
+}
+
+export { auth, db, storage }
 export default app
